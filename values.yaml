@@ -1,0 +1,245 @@
+
+# These values override the default values in the subcharts.
+
+global:
+  tls:
+    enabled: false
+  rbacEnabled: true
+  adminUser: test
+  # password is 'test'
+  adminPasswordHash: C5ufXbYlww6ZBcEqDUB04YdUptO81s+ozI3Ll5GCHTnv8NAm
+  pg_in_password: inpass
+  pg_out_password: outpass
+  schemaType: standalone
+  # required when schema type is "federated"
+  cega:
+    user: cegis
+    password: pass
+  # --
+  auth:
+    # required when schema is not "federated"
+    elixirID: elix
+    elixirSecret: sec
+    # --
+    jwtKey: key
+    jwtPub: pubkey
+    jwtSecret: sec
+  archive:
+    # TODO: This should be calculated!
+    s3Url: http://test-dev-s3
+    s3Bucket: archive
+    storageType: s3
+    s3AccessKey: minio
+    s3SecretKey: minio123
+  inbox:
+    # TODO: This should be calculated!
+    s3Url: http://test-dev-s3
+    s3Bucket: inbox
+    storageType: s3
+    s3AccessKey: minio
+    s3SecretKey: minio123
+  broker:
+    port: 5672
+  c4gh:
+    keyFile: c4gh.sec.pem
+    pubFile: c4gh.pub.pem
+    private_key: |
+      -----BEGIN CRYPT4GH ENCRYPTED PRIVATE KEY-----
+      YzRnaC12MQAGc2NyeXB0ABQAAAAA7SpD5fhWA7dI8jV6fOnTZQARY2hhY2hhMjBf
+      cG9seTEzMDUAPAOLqm4fy9V4S6N7vhp4+Gaw6tcTDhS2FV0snkNkctshHsEkiqcr
+      +rbGcq+3VjqoOsqL78b/XnIDlskyhQ==
+      -----END CRYPT4GH ENCRYPTED PRIVATE KEY-----
+    public_key: |
+      -----BEGIN CRYPT4GH PUBLIC KEY-----
+      AvkknHAGQZWLE12m8jsGDqpu5axAanh6rUR1kh3pqUw=
+      -----END CRYPT4GH PUBLIC KEY-----
+    secretName: c4gh
+    passphrase: test
+  ingress:
+    hostName:
+      auth: auth.sda.dev
+      doa: ""
+      download: download.sda.dev
+      s3Inbox: inbox.sda.dev
+  download:
+    enabled: false
+  log:
+    level: debug
+    format: human
+
+sda-db:
+  deploy: true
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "250m"
+
+sda-mq:
+  deploy: false
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+sda-orch:
+  deploy: false
+  tls:
+    enabled: false
+  pkiService:
+    enabled: false
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "250m"
+
+sda-svc:
+  deploy: false
+  credentials:
+    backup:
+      dbUser: backup
+      dbPassword: backup
+      mqUser: test
+      mqPassword: test
+    doa:
+      dbUser: doa
+      dbPassword: doa
+    download:
+      dbUser: downloads
+      dbPassword: download
+    finalize:
+      dbUser: lega_in
+      dbPassword: inpass
+      mqUser: test
+      mqPassword: test
+    inbox:
+      mqUser: inbox
+      mqPassword: inbox
+      dbUser: test
+      dbPassword: test
+    ingest:
+      dbUser: lega_in
+      dbPassword: inpass
+      mqUser: test
+      mqPassword: test
+    intercept:
+      mqUser: intercept
+      mqPassword: intercept
+    mapper:
+      dbUser: lega_in
+      dbPassword: inpass
+      mqUser: test
+      mqPassword: test
+    verify:
+      dbUser: lega_in
+      dbPassword: inpass
+      mqUser: test
+      mqPassword: test
+
+  auth:
+    replicaCount: 1
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "250m"
+  backup:
+    replicaCount: 1
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "200m"
+  doa:
+    replicaCount: 1
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "100m"
+      limits:
+        memory: "512Mi"
+        cpu: "200m"
+  download:
+    replicaCount: 2
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "100m"
+      limits:
+        memory: "512Mi"
+        cpu: "200m"
+  finalize:
+    replicaCount: 1
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "250m"
+  ingest:
+    replicaCount: 1
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "200m"
+  intercept:
+    deploy: false # should be set by .global.schematype
+    replicaCount: 1
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "250m"
+  mapper:
+    replicaCount: 1
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "200m"
+  s3Inbox:
+    replicaCount: 1
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "200m"
+  sftpInbox:
+    replicaCount: 1
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "250m"
+  verify:
+    replicaCount: 1
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "200m"

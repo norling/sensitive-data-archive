@@ -1,0 +1,15 @@
+dependencies:
+- name: sda-db
+  repository: ""
+  version: ^0
+- name: sda-mq
+  repository: ""
+  version: ^0
+- name: sda-orch
+  repository: ""
+  version: ^0
+- name: sda-svc
+  repository: ""
+  version: ^0
+digest: sha256:55d62a239330267bf0046d31bdf572844dcf6ece94af13e1b4eafb36514af638
+generated: "2023-06-15T15:44:38.357939+02:00"
