@@ -1,0 +1,25 @@
+# Default values for dev-s3.
+
+storageClassName: ""
+storageSize: 2Gi
+
+image:
+  repository: minio/minio
+  pullPolicy: IfNotPresent
+  tag: RELEASE.2023-05-27T05-56-19Z
+
+service:
+  port: 443
+  adminPort: 9001
+
+defaultBuckets:
+  - archive
+  - inbox
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi

@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dev-s3.fullname" . }}
+  labels:
+    {{- include "dev-s3.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "dev-s3.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "dev-s3.selectorLabels" . | nindent 8 }}
+    spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ include "dev-s3.fullname" . }}-pvc
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - >
+                  for dir in '{{ join "' '" .Values.defaultBuckets }}';
+                  do
+                    mkdir -p "/data/$dir";
+                  done
+        volumeMounts:
+          - name: data
+            mountPath: /data
+        args:
+        - server
+        - /data
+        - --console-address
+        - :9001
+        env:
+        # MinIO access key and secret key
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "dev-s3.fullname" . }}
+              key: MINIO_ROOT_USER
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "dev-s3.fullname" . }}
+              key: MINIO_ROOT_PASSWORD
+        - name: MINIO_SERVER_URL
+          value: http://127.0.0.1:9000
+        ports:
+          - name: s3
+            containerPort: 9000
+            protocol: TCP
+          - name: admin
+            containerPort: 9001
+            protocol: TCP
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        # Readiness probe detects situations when MinIO server instance
+        # is not ready to accept traffic. Kubernetes doesn't forward
+        # traffic to the pod while readiness checks fail.
+        readinessProbe:
+          httpGet:
+            path: /minio/health/ready
+            port: s3
+          initialDelaySeconds: 30
+          periodSeconds: 20
+        # Liveness probe detects situations where MinIO server instance
+        # is not working properly and needs restart. Kubernetes automatically
+        # restarts the pods if liveness checks fail.
+        livenessProbe:
+          httpGet:
+            path: /minio/health/live
+            port: s3
+          initialDelaySeconds: 30
+          periodSeconds: 20

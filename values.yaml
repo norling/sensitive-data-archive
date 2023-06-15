@@ -1,4 +1,11 @@
 
+# Setting `develop: true`` makes the system install minio as storage backend
+# for convenient local development.
+# Currently the system must be deployed with the name "test" for the default
+# paths to work.
+
+develop: true
+
 # These values override the default values in the subcharts.
 
 global:
