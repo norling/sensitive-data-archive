@@ -53,7 +53,7 @@ spec:
       serviceAccountName: {{ .Release.Name }}
     {{- end }}
       securityContext:
-        runAsUser: 65534 
+        runAsUser: 65534
         runAsGroup: 65534
         fsGroup: 65534
     {{- if and .Values.global.pkiPermissions .Values.global.tls.enabled }}
@@ -131,7 +131,7 @@ spec:
         - name: DB_DATABASE
           value: {{ default "lega" .Values.global.db.name | quote }}
         - name: DB_HOST
-          value: {{ required "A valid DB host is required" .Values.global.db.host | quote }}
+          value: {{ default (printf "%s-sda-db" .Release.Name) .Values.global.db.host | quote }}
         - name: DB_PORT
           value: {{ .Values.global.db.port | quote }}
       {{- if .Values.global.log.format }}

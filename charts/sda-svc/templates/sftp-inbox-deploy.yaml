@@ -58,7 +58,7 @@ spec:
       serviceAccountName: {{ .Release.Name }}
     {{- end }}
       securityContext:
-        runAsUser: 65534 
+        runAsUser: 65534
         runAsGroup: 65534
         fsGroup: 65534
       {{- if not .Values.global.pkiService }}
@@ -108,7 +108,7 @@ spec:
         - name: LOGGING_LEVEL_SE_NBIS_LEGA_INBOX
           value: {{ .Values.global.logLevel | quote }}
         - name: BROKER_HOST
-          value: {{ required "A valid MQ host is required" .Values.global.broker.host | quote }}
+          value: {{ default (printf "%s-sda-mq" .Release.Name) .Values.global.broker.host | quote }}
         - name: BROKER_PASSWORD
           valueFrom:
             secretKeyRef:

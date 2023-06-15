@@ -74,7 +74,7 @@ spec:
           value: {{ .Values.broker.username | quote }}
       {{- end }}
         - name: BROKER_HOST
-          value: {{ required "A valid MQ Host is required" .Values.broker.host | quote }}
+          value: {{ default (printf "%s-sda-mq" .Release.Name) .Values.global.broker.host | quote }}
         - name: BROKER_PORT
           value: {{ .Values.broker.port | quote }}
         - name: BROKER_VHOST
