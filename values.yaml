@@ -10,7 +10,9 @@ develop: true
 
 global:
   tls:
-    enabled: false
+    enabled: true
+    issuer: test-sensitive-data-archive
+
   rbacEnabled: true
   adminUser: test
   # password is 'test'
@@ -46,7 +48,7 @@ global:
     s3AccessKey: minio
     s3SecretKey: minio123
   broker:
-    port: 5672
+    port: 5671
   c4gh:
     keyFile: c4gh.sec.pem
     pubFile: c4gh.pub.pem
@@ -84,21 +86,22 @@ sda-db:
     cpu: "250m"
 
 sda-mq:
-  deploy: false
+  deploy: true
   resources:
     requests:
       memory: "256Mi"
-      cpu: "200m"
+      cpu: "500m"
     limits:
       memory: "512Mi"
-      cpu: "500m"
+      cpu: "1"
 
 sda-orch:
   deploy: false
   tls:
-    enabled: false
+    enabled: true
   pkiService:
     enabled: false
+    tlsPath: ""
   resources:
     requests:
       memory: "128Mi"
@@ -108,7 +111,7 @@ sda-orch:
       cpu: "250m"
 
 sda-svc:
-  deploy: false
+  deploy: true
   credentials:
     backup:
       dbUser: backup

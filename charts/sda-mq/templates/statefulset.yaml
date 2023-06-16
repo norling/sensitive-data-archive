@@ -11,7 +11,7 @@ metadata:
     role: broker
 spec:
   replicas: 1
-  updateStrategy: 
+  updateStrategy:
     type: {{ .Values.updateStrategyType }}
   revisionHistoryLimit: {{ default "3" .Values.revisionHistory }}
   serviceName: {{ template "sda.fullname" . }}
@@ -86,7 +86,7 @@ spec:
           value: {{ template "mqKey" . }}
         {{- if .Values.global.tls.verifyPeer }}
         - name: MQ_CA
-          value: {{ template "caCert" . }}
+          value: {{ template "mqCaCert" . }}
         - name: MQ_VERIFY
           value: {{ template "verifyPeer" . }}
         {{- end }}

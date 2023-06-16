@@ -11,7 +11,7 @@ metadata:
     role: database
 spec:
   replicas: 1
-  updateStrategy: 
+  updateStrategy:
     type: {{ .Values.updateStrategyType }}
   revisionHistoryLimit: {{ default "3" .Values.revisionHistory }}
   serviceName: {{ template "sda.fullname" . }}

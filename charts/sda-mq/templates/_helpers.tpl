@@ -58,7 +58,7 @@ Create chart name and version as used by the chart label.
     {{- end -}}
 {{- end -}}
 
-{{- define "caCert" -}}
+{{- define "mqCaCert" -}}
     {{- if .Values.externalPkiService.tlsPath }}
         {{- printf "%s" (regexReplaceAll "^/*|/+" (printf "%s/%s" .Values.externalPkiService.tlsPath .Values.global.tls.caCert) "/")}}
     {{- else if or .Values.global.tls.clusterIssuer .Values.global.tls.issuer }}
