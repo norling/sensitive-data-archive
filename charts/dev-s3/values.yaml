@@ -12,14 +12,10 @@ service:
   port: 443
   adminPort: 9001
 
-defaultBuckets:
-  - archive
-  - inbox
-
 resources:
   limits:
     cpu: 100m
-    memory: 128Mi
+    memory: 256Mi
   requests:
     cpu: 100m
-    memory: 128Mi
+    memory: 256Mi

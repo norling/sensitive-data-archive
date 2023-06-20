@@ -22,6 +22,9 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: {{ include "dev-s3.fullname" . }}-pvc
+      - name: certs
+        secret:
+          secretName: {{ template "dev-s3.fullname" . }}-dev-s3-certs
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -33,13 +36,15 @@ spec:
                 - "sh"
                 - "-c"
                 - >
-                  for dir in '{{ join "' '" .Values.defaultBuckets }}';
-                  do
-                    mkdir -p "/data/$dir";
-                  done
+                  mkdir -p /root/.minio/certs/CAs;
+                  ln -s /certs/tls.crt /root/.minio/certs/public.crt;
+                  ln -s /certs/tls.key /root/.minio/certs/private.key;
+                  ln -s /certs/ca.crt /root/.minio/certs/CAs/public.crt;
         volumeMounts:
           - name: data
             mountPath: /data
+          - name: certs
+            mountPath: /certs
         args:
         - server
         - /data
@@ -58,7 +63,7 @@ spec:
               name: {{ template "dev-s3.fullname" . }}
               key: MINIO_ROOT_PASSWORD
         - name: MINIO_SERVER_URL
-          value: http://127.0.0.1:9000
+          value: https://127.0.0.1:9000
         ports:
           - name: s3
             containerPort: 9000
@@ -73,6 +78,7 @@ spec:
         # traffic to the pod while readiness checks fail.
         readinessProbe:
           httpGet:
+            scheme: HTTPS
             path: /minio/health/ready
             port: s3
           initialDelaySeconds: 30
@@ -82,6 +88,7 @@ spec:
         # restarts the pods if liveness checks fail.
         livenessProbe:
           httpGet:
+            scheme: HTTPS
             path: /minio/health/live
             port: s3
           initialDelaySeconds: 30
