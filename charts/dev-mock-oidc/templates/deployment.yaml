@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dev-mock-oidc.fullname" . }}
+  labels:
+    {{- include "dev-mock-oidc.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "dev-mock-oidc.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "dev-mock-oidc.selectorLabels" . | nindent 8 }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.oidcImage.repository }}:{{ .Values.oidcImage.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.oidcImage.pullPolicy }}
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "dev-mock-oidc.fullname" . }}-oidc
+                  key: port
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "dev-mock-oidc.fullname" . }}-oidc
+                  key: host
+            - name: CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "dev-mock-oidc.fullname" . }}-oidc
+                  key: client_id
+            - name: CLIENT_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "dev-mock-oidc.fullname" . }}-oidc
+                  key: client_secret
+            - name: CLIENT_REDIRECT_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "dev-mock-oidc.fullname" . }}-oidc
+                  key: client_redirect_uri
+            - name: AUTH_ROUTE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "dev-mock-oidc.fullname" . }}-oidc
+                  key: auth_route
+            - name: INTROSPECTION_ROUTE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "dev-mock-oidc.fullname" . }}-oidc
+                  key: introspection_route
+            - name: JWKS_ROUTE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "dev-mock-oidc.fullname" . }}-oidc
+                  key: jwks_route
+            - name: REVOCATION_ROUTE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "dev-mock-oidc.fullname" . }}-oidc
+                  key: revocation_route
+            - name: TOKEN_ROUTE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "dev-mock-oidc.fullname" . }}-oidc
+                  key: token_route
+            - name: USERINFO_ROUTE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "dev-mock-oidc.fullname" . }}-oidc
+                  key: userinfo_route
+          ports:
+            - name: http
+              containerPort: 9090
+              protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /.well-known/openid-configuration
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /.well-known/openid-configuration
+          #     port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

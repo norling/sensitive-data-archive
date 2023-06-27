@@ -4,7 +4,9 @@
 # Currently the system must be deployed with the name "test" for the default
 # paths to work.
 
-develop: true
+develop:
+  s3: true
+  oidc: true
 
 # These values override the default values in the subcharts.
 
@@ -30,25 +32,36 @@ global:
     elixirID: elix
     elixirSecret: sec
     # --
-    jwtKey: key
-    jwtPub: pubkey
+    jwtKey: jwt.key
+    jwtPub: jwt.pub
     jwtSecret: sec
+    jwtPrivateKey: |
+      -----BEGIN CRYPT4GH ENCRYPTED PRIVATE KEY-----
+      YzRnaC12MQAGc2NyeXB0ABQAAAAA7SpD5fhWA7dI8jV6fOnTZQARY2hhY2hhMjBf
+      cG9seTEzMDUAPAOLqm4fy9V4S6N7vhp4+Gaw6tcTDhS2FV0snkNkctshHsEkiqcr
+      +rbGcq+3VjqoOsqL78b/XnIDlskyhQ==
+      -----END CRYPT4GH ENCRYPTED PRIVATE KEY-----
+    jwtPublicKey: |
+      -----BEGIN CRYPT4GH PUBLIC KEY-----
+      AvkknHAGQZWLE12m8jsGDqpu5axAanh6rUR1kh3pqUw=
+      -----END CRYPT4GH PUBLIC KEY-----
   archive:
-    # TODO: This should be calculated!
-    s3Url: http://test-dev-s3
+    s3Url: https://test-dev-s3 # TODO: This should be generated if not set!
+    s3CaFile: true
     s3Bucket: archive
     storageType: s3
     s3AccessKey: minio
     s3SecretKey: minio123
   inbox:
-    # TODO: This should be calculated!
-    s3Url: http://test-dev-s3
+    s3Url: https://test-dev-s3 # TODO: This should be generated if not set!
+    s3CaFile: true
     s3Bucket: inbox
     storageType: s3
     s3AccessKey: minio
     s3SecretKey: minio123
   broker:
     port: 5671
+    exchange: localega.v1
   c4gh:
     keyFile: c4gh.sec.pem
     pubFile: c4gh.pub.pem
@@ -64,9 +77,15 @@ global:
       -----END CRYPT4GH PUBLIC KEY-----
     secretName: c4gh
     passphrase: test
+
+  elixir:
+    oidcConfig: "http://test-dev-mock-oidc:9090"
+    provider:  "http://test-dev-mock-oidc:9090"
+    jwkPath: "jwk"
+
   ingress:
     hostName:
-      auth: auth.sda.dev
+      auth: kubernetes.docker.internal
       doa: ""
       download: download.sda.dev
       s3Inbox: inbox.sda.dev
@@ -130,10 +149,10 @@ sda-svc:
       mqUser: test
       mqPassword: test
     inbox:
-      mqUser: inbox
-      mqPassword: inbox
-      dbUser: test
-      dbPassword: test
+      dbUser: lega_in
+      dbPassword: inpass
+      mqUser: test
+      mqPassword: test
     ingest:
       dbUser: lega_in
       dbPassword: inpass
