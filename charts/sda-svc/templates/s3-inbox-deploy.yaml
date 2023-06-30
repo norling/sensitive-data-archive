@@ -74,6 +74,12 @@ spec:
         - name: tls
           mountPath: /tls
     {{- end }}
+      - name: wait-for-db
+        image: busybox:1.28
+        command: ['sh', '-c', "until nc -w 1 -v {{ .Release.Name }}-sda-db 5432; do echo waiting for postgresql; sleep 2; done"]
+      - name: wait-for-mq
+        image: busybox:1.28
+        command: ['sh', '-c', "until nc -w 1 -v {{ .Release.Name }}-sda-mq 5671; do echo waiting for rabbitmq; sleep 2; done"]
       containers:
       - name: s3inbox
         image: "{{ .Values.s3Inbox.repository }}:{{ .Values.s3Inbox.imageTag }}"

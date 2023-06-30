@@ -61,7 +61,7 @@ global:
     s3SecretKey: minio123
   broker:
     port: 5671
-    exchange: localega.v1
+    exchange: sda
   c4gh:
     keyFile: c4gh.sec.pem
     pubFile: c4gh.pub.pem
