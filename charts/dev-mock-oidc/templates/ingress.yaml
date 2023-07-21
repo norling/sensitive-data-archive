@@ -1,0 +1,26 @@
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "dev-mock-oidc.fullname" . }}
+  labels:
+    {{- include "dev-mock-oidc.labels" . | nindent 4 }}
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    {{- with .Values.ingress.annotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: kubernetes.docker.internal
+    http:
+      paths:
+      - path: /oidc/(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name:  {{ include "dev-mock-oidc.fullname" . }}
+            port:
+              number: 9090

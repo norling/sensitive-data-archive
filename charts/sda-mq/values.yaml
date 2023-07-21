@@ -55,7 +55,7 @@ networkPolicy:
 ## If set to "-", storageClassName: "", which disables dynamic provisioning
 ## If undefined (the default) or set to null, no storageClassName spec is
 ##   set, choosing the default provisioner.
-persistence: 
+persistence:
   enabled: false
   storageSize: 8Gi
   storageClass: null
@@ -98,7 +98,7 @@ testimage:
   tag: latest
   pullPollicy: Always
   tls:
-    secretName: 
+    secretName:
     tlsKey: tls.key
     tlsCert: tls.crt
     caCert: ca.crt

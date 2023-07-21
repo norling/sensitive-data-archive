@@ -319,7 +319,7 @@ auth:
   name: auth
   replicaCount: 2
   repository: ghcr.io/neicnordic/sda-auth
-  imageTag: v0.7.6
+  imageTag: v0.7.13
   imagePullPolicy: IfNotPresent
   resources:
     requests:
@@ -482,7 +482,7 @@ mapper:
 s3Inbox:
   name: s3Inbox
   repository: ghcr.io/neicnordic/sda-s3proxy
-  imageTag: v0.2.38
+  imageTag: v0.2.49
   imagePullPolicy: IfNotPresent
   replicaCount: 2
   resources:

@@ -54,7 +54,7 @@ spec:
       serviceAccountName: {{ .Release.Name }}
     {{- end }}
       securityContext:
-        runAsUser: 65534 
+        runAsUser: 65534
         runAsGroup: 65534
         fsGroup: 65534
     {{- if not .Values.global.pkiService }}
@@ -113,7 +113,7 @@ spec:
           value: no-oss,LocalEGA
       {{- if .Values.global.doa.outbox.enabled }}
         - name: BROKER_HOST
-          value: {{ required "A valid MQ host is required" .Values.global.broker.host | quote }}
+          value: {{ default (printf "%s-sda-mq" .Release.Name) .Values.global.broker.host | quote }}
         - name: BROKER_PORT
           value: {{ .Values.global.broker.port | quote }}
         - name: BROKER_VHOST
@@ -134,7 +134,7 @@ spec:
         {{- end }}
       {{- end }}
         - name: DB_INSTANCE
-          value: {{ required "A valid database host is required" .Values.global.db.host | quote}}
+          value: {{ default (printf "%s-sda-db" .Release.Name) .Values.global.db.host | quote }}
         - name: DB_PORT
           value: {{ .Values.global.db.port | quote }}
         - name: POSTGRES_DB

@@ -57,6 +57,12 @@ spec:
           mountPath: /tls-certs
         - name: tls
           mountPath: /tls
+      - name: wait-for-db
+        image: busybox:1.28
+        command: ['sh', '-c', "until nc -w 1 -v {{ .Release.Name }}-sda-db 5432; do echo waiting for postgresql; sleep 2; done"]
+      - name: wait-for-mq
+        image: busybox:1.28
+        command: ['sh', '-c', "until nc -w 1 -v {{ .Release.Name }}-sda-mq 5671; do echo waiting for rabbitmq; sleep 2; done"]
     {{- end }}
       containers:
       - name: finalize
@@ -73,7 +79,7 @@ spec:
         - name: BROKER_QUEUE
           value: "accessionIDs"
         - name: BROKER_HOST
-          value: {{ required "A valid MQ host is required" .Values.global.broker.host | quote }}
+          value: {{ default (printf "%s-sda-mq" .Release.Name) .Values.global.broker.host | quote }}
         - name: BROKER_PORT
           value: {{ .Values.global.broker.port | quote }}
         - name: BROKER_PREFETCHCOUNT
@@ -85,7 +91,7 @@ spec:
         - name: BROKER_VHOST
           value: {{ .Values.global.broker.vhost | quote }}
         - name: BROKER_SERVERNAME
-          value: {{ .Values.global.broker.host | quote }}
+          value: {{ default (printf "%s-sda-mq" .Release.Name) .Values.global.broker.host | quote }}
         - name: BROKER_SSL
           value: {{ .Values.global.tls.enabled | quote }}
         {{- if and .Values.global.broker.ssl .Values.global.tls.enabled }}
@@ -113,7 +119,7 @@ spec:
         - name: DB_DATABASE
           value: {{ default "lega" .Values.global.db.name | quote }}
         - name: DB_HOST
-          value: {{ required "A valid DB host is required" .Values.global.db.host | quote }}
+          value: {{ default (printf "%s-sda-db" .Release.Name) .Values.global.db.host | quote }}
         - name: DB_PORT
           value: {{ .Values.global.db.port | quote }}
         - name: DB_SSLMODE

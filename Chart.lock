@@ -1,0 +1,18 @@
+dependencies:
+- name: sda-db
+  repository: ""
+  version: ^0
+- name: sda-mq
+  repository: ""
+  version: ^0
+- name: sda-orch
+  repository: ""
+  version: ^0
+- name: sda-svc
+  repository: ""
+  version: ^0
+- name: dev-s3
+  repository: ""
+  version: ^0
+digest: sha256:cc15f217ecde6d259f1f204a4f42c9527b08d95540d013ee1bd996bba0ad1f62
+generated: "2023-06-15T15:47:18.9354833+02:00"
