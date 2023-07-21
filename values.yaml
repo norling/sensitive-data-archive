@@ -111,8 +111,8 @@ sda-mq:
       memory: "256Mi"
       cpu: "500m"
     limits:
-      memory: "512Mi"
-      cpu: "1"
+      memory: "1Gi"
+      cpu: "2"
 
 sda-orch:
   deploy: false
