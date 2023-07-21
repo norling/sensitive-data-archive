@@ -22,3 +22,12 @@ Expand the name of the chart.
 {{- define "sda.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Create a mock-oidc hostname from the global.elixir.provider url
+*/}}
+{{- define "sda.mockOidcHost" -}}
+{{- $url := urlParse .Values.global.elixir.provider -}}
+{{- $base := regexFind "[a-zA-Z0-9-_.]+" $url.host -}}
+{{- printf "%s" $base }}
+{{- end -}}

@@ -6,7 +6,7 @@ metadata:
     {{- include "dev-mock-oidc.labels" . | nindent 4 }}
 data:
   port: "9090"
-  host: test-dev-mock-oidc
+  host: {{ template "sda.mockOidcHost" . }}
   client_id: XC56EL11xx
   client_secret: wHPVQaYXmdDHg
   client_redirect_uri: http://kubernetes.docker.internal/elixir/login
