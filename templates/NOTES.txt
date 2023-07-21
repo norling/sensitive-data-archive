@@ -1,1 +1,9 @@
 Deployed the Sensitive Data Archive.
+
+{{- if .Values.develop.oidc }}
+- Running mock-OIDC
+{{- end }}
+
+{{- if .Values.develop.s3 }}
+- Running dev-S3
+{{- end }}
