@@ -11,6 +11,7 @@ on:
       - .helmignore
       - templates/**
       - charts/**
+      - .github/workflows/publish_charts.yaml
 
 jobs:
   release:
