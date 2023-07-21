@@ -5,7 +5,12 @@ on:
     branches:
       - main
     paths:
-      - "charts/**"
+      - Chart.lock
+      - Chart.yaml
+      - values.yaml
+      - .helmignore
+      - templates/**
+      - charts/**
 
 jobs:
   release:
