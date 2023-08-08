@@ -9,7 +9,7 @@ For more information about the different components see the readme files in the 
 The sensitive data archive (sda) is most easily deployed with helm. To install
 the system, install the dependencies, edit the values.yaml file, and run:
 ```bash
-helm install <name> .
+helm install <name> charts/sda
 ```
 
 ### Dependencies

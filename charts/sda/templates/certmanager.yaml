@@ -1,0 +1,30 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ template "sda.fullname" . }}
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "sda.fullname" . }}-ca
+spec:
+  isCA: true
+  commonName: {{ include "sda.fullname" . }}-ca
+  secretName: {{ include "sda.fullname" . }}-ca
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: {{ template "sda.fullname" . }}
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "sda.fullname" . }}
+spec:
+  ca:
+    secretName: {{ include "sda.fullname" . }}-ca
