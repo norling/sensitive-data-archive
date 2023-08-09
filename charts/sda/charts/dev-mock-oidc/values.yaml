@@ -1,9 +1,9 @@
 # Default values for dev-mock-oidc.
 
 oidcImage:
-  repository: mock-oidc
+  repository: norling/mock-oidc
   pullPolicy: IfNotPresent
-  tag: latest
+  tag: 0.1.0
 
 podAnnotations: {}
 
